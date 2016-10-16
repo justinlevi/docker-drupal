@@ -27,6 +27,14 @@ RUN apt-get install -y \
 	unzip \
 	cron \
 	supervisor
+
+#Install node js
+RUN curl -sL https://deb.nodesource.com/setup | bash -
+RUN apt-get install -y nodejs
+
+#Install bower
+RUN npm install -g bower
+
 RUN apt-get clean
 
 # Setup PHP.
