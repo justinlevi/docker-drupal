@@ -35,6 +35,8 @@ RUN apt-get install -y nodejs
 #Install bower
 RUN npm install -g bower
 
+RUN echo '{ "allow_root": true }' > /root/.bowerrc
+
 RUN apt-get clean
 
 # Setup PHP.
