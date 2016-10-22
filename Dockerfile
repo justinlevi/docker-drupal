@@ -123,6 +123,12 @@ RUN ln -s /root/.composer/vendor/drush/drush/drush /bin/drush
 # RUN mv drupal.phar /usr/local/bin/drupal && chmod +x /usr/local/bin/drupal
 # RUN drupal init
 
+RUN /etc/init.d/mysql start
+RUN /usr/sbin/mysqld & \
+sleep 10s &&\
+echo "GRANT ALL ON *.* TO drupal@'%' IDENTIFIED BY 'drupal' WITH GRANT OPTION; FLUSH PRIVILEGES" | mysql
+
+
 # Install Drupal.
 RUN rm -rf /var/www
 RUN cd /var && \
@@ -151,10 +157,7 @@ RUN mkdir -p /var/www/sites/default/files && \
 # 		--account-name=admin \
 # 		--account-mail=admin@example.com \
 # 		--account-pass=admin
-RUN /etc/init.d/mysql start
-RUN /usr/sbin/mysqld && \
-	sleep 10s && \
-	echo "GRANT ALL ON *.* TO drupal@'%' IDENTIFIED BY 'drupal' WITH GRANT OPTION; FLUSH PRIVILEGES" | mysql && \
+RUN /etc/init.d/mysql start && \
 	cd /var/www && \
 	drush si -y minimal --db-url=mysql://root:@localhost/drupal --account-pass=admin
 	# drush dl admin_menu devel && \
@@ -164,4 +167,5 @@ RUN /usr/sbin/mysqld && \
 	# drush vset "node_admin_theme" 1
 
 EXPOSE 80 3306 22 443
+CMD ["/usr/bin/mysqld_safe"]
 CMD exec supervisord -n
