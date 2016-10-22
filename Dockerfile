@@ -151,7 +151,10 @@ RUN mkdir -p /var/www/sites/default/files && \
 # 		--account-name=admin \
 # 		--account-mail=admin@example.com \
 # 		--account-pass=admin
-RUN /etc/init.d/mysql start && \
+RUN /etc/init.d/mysql start
+RUN /usr/sbin/mysqld && \
+	sleep 10s && \
+	echo "GRANT ALL ON *.* TO drupal@'%' IDENTIFIED BY 'drupal' WITH GRANT OPTION; FLUSH PRIVILEGES" | mysql && \
 	cd /var/www && \
 	drush si -y minimal --db-url=mysql://root:@localhost/drupal --account-pass=admin
 	# drush dl admin_menu devel && \
