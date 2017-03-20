@@ -26,6 +26,7 @@ RUN apt-get install -y \
 	wget \
 	unzip \
 	cron \
+	net-tools \
 	supervisor
 
 #Install node js
